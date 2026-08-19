@@ -6,79 +6,561 @@
 
   <meta
     name="viewport"
-    content="width=device-width, initial-scale=1.0"
+    content="width=device-width, initial-scale=1.0, viewport-fit=cover"
   >
 
-  <title>Jasmine AR Demo</title>
+  <title>M Card Mother's Day AR</title>
 
+  <!-- Google Model Viewer -->
   <script
     type="module"
     src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js">
   </script>
 
   <style>
+
+    /* ------------------------------
+       GLOBAL
+    ------------------------------ */
+
     * {
       box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
     }
 
     body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #f5f5f5;
+      font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Arial,
+        sans-serif;
+
+      background: #b00020;
+      color: #ffffff;
+    }
+
+
+    /* ------------------------------
+       MAIN CAMPAIGN
+    ------------------------------ */
+
+    .campaign {
+      position: relative;
+
+      width: 100vw;
+      height: 100dvh;
+
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+
+      padding:
+        max(24px, env(safe-area-inset-top))
+        24px
+        max(24px, env(safe-area-inset-bottom));
+
+      overflow: hidden;
+
+      background:
+        radial-gradient(
+          circle at 80% 15%,
+          rgba(255, 160, 180, 0.65),
+          transparent 32%
+        ),
+
+        radial-gradient(
+          circle at 10% 75%,
+          rgba(26, 48, 120, 0.55),
+          transparent 35%
+        ),
+
+        linear-gradient(
+          155deg,
+          #d7193f 0%,
+          #c4163c 42%,
+          #9d102c 68%,
+          #22154c 100%
+        );
+    }
+
+
+    /* ------------------------------
+       DECORATION
+    ------------------------------ */
+
+    .glow {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(10px);
+      pointer-events: none;
+    }
+
+    .glow-1 {
+      width: 180px;
+      height: 180px;
+
+      top: -50px;
+      right: -50px;
+
+      background: rgba(255, 211, 218, 0.25);
+    }
+
+    .glow-2 {
+      width: 240px;
+      height: 240px;
+
+      bottom: 10%;
+      left: -140px;
+
+      background: rgba(70, 95, 210, 0.22);
+    }
+
+
+    /* ------------------------------
+       HEADER
+    ------------------------------ */
+
+    .header {
+      position: relative;
+      z-index: 10;
+
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .brand {
+      font-size: 18px;
+      font-weight: 800;
+
+      letter-spacing: 0.08em;
+    }
+
+    .campaign-label {
+      padding: 7px 12px;
+
+      border: 1px solid rgba(255,255,255,0.28);
+      border-radius: 999px;
+
+      background: rgba(255,255,255,0.10);
+
+      backdrop-filter: blur(12px);
+
+      font-size: 11px;
+      font-weight: 600;
+
+      letter-spacing: 0.08em;
+    }
+
+
+    /* ------------------------------
+       HERO
+    ------------------------------ */
+
+    .hero {
+      position: relative;
+      z-index: 5;
+
+      flex: 1;
+
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+
+      text-align: center;
+
+      min-height: 0;
+    }
+
+    .eyebrow {
+      margin-bottom: 8px;
+
+      font-size: 13px;
+      font-weight: 600;
+
+      letter-spacing: 0.14em;
+
+      text-transform: uppercase;
+
+      opacity: 0.82;
+    }
+
+    h1 {
+      font-size: clamp(34px, 9vw, 54px);
+      line-height: 0.98;
+
+      font-weight: 800;
+
+      letter-spacing: -0.04em;
+
+      margin-bottom: 12px;
+    }
+
+    h1 span {
+      display: block;
+
+      font-family: Georgia, serif;
+      font-style: italic;
+      font-weight: 400;
+
+      color: #ffdce5;
+    }
+
+    .description {
+      max-width: 320px;
+
+      font-size: 15px;
+      line-height: 1.55;
+
+      color: rgba(255,255,255,0.82);
+    }
+
+
+    /* ------------------------------
+       3D PREVIEW
+    ------------------------------ */
+
+    .model-wrapper {
+      position: relative;
+
+      width: min(82vw, 380px);
+      height: min(39vh, 390px);
+
+      margin: 12px auto 4px;
+    }
+
+    .model-glow {
+      position: absolute;
+
+      width: 78%;
+      height: 78%;
+
+      left: 11%;
+      top: 12%;
+
+      border-radius: 50%;
+
+      background:
+        radial-gradient(
+          circle,
+          rgba(255,255,255,0.35),
+          rgba(255,255,255,0.05) 60%,
+          transparent 72%
+        );
+
+      filter: blur(16px);
     }
 
     model-viewer {
-      width: 100vw;
-      height: 100vh;
-      background: #f5f5f5;
+      position: relative;
+
+      width: 100%;
+      height: 100%;
+
+      background: transparent;
+
+      --poster-color: transparent;
     }
 
-    .ar-button {
-      position: absolute;
-      left: 50%;
-      bottom: 32px;
-      transform: translateX(-50%);
 
-      padding: 14px 24px;
+    /* Hide default AR button */
+    model-viewer::part(default-ar-button) {
+      display: none;
+    }
 
-      border: none;
-      border-radius: 999px;
 
-      background: #111;
-      color: white;
+    /* ------------------------------
+       BOTTOM
+    ------------------------------ */
 
-      font-size: 16px;
+    .bottom {
+      position: relative;
+      z-index: 10;
+    }
+
+    .instruction {
+      display: flex;
+      justify-content: center;
+
+      gap: 10px;
+
+      margin-bottom: 14px;
+
+      font-size: 11px;
       font-weight: 600;
 
-      cursor: pointer;
+      letter-spacing: 0.04em;
+
+      color: rgba(255,255,255,0.68);
     }
+
+    .instruction span {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .dot {
+      width: 4px;
+      height: 4px;
+
+      border-radius: 50%;
+
+      background: rgba(255,255,255,0.5);
+
+      align-self: center;
+    }
+
+
+    /* ------------------------------
+       AR CTA
+    ------------------------------ */
+
+    .ar-button {
+      width: 100%;
+
+      min-height: 58px;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      gap: 10px;
+
+      padding: 16px 22px;
+
+      border: none;
+      border-radius: 18px;
+
+      background: #ffffff;
+      color: #bb1739;
+
+      font-size: 16px;
+      font-weight: 800;
+
+      box-shadow:
+        0 12px 32px
+        rgba(50, 0, 15, 0.28);
+
+      cursor: pointer;
+
+      transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+    }
+
+    .ar-button:active {
+      transform: scale(0.98);
+    }
+
+    .arrow {
+      font-size: 20px;
+    }
+
+    .caption {
+      margin-top: 10px;
+
+      text-align: center;
+
+      font-size: 10px;
+
+      color: rgba(255,255,255,0.55);
+    }
+
+
+    /* ------------------------------
+       DESKTOP
+    ------------------------------ */
+
+    @media (min-width: 768px) {
+
+      .campaign {
+        max-width: 520px;
+
+        margin: auto;
+      }
+
+      body {
+        background: #111111;
+      }
+
+    }
+
   </style>
 </head>
 
+
 <body>
 
-  <model-viewer
-    src="./Jasmine_02.glb"
 
-    alt="Jasmine 3D Model"
+  <main class="campaign">
 
-    camera-controls
-    auto-rotate
+    <!-- Decorative glow -->
 
-    shadow-intensity="1"
-    exposure="1"
+    <div class="glow glow-1"></div>
+    <div class="glow glow-2"></div>
 
-    ar
-    ar-modes="webxr scene-viewer quick-look"
-    ar-scale="auto">
 
-    <button
-      slot="ar-button"
-      class="ar-button">
-      View in AR
-    </button>
+    <!-- Header -->
 
-  </model-viewer>
+    <header class="header">
+
+      <div class="brand">
+        M CARD
+      </div>
+
+      <div class="campaign-label">
+        MOTHER'S DAY 2026
+      </div>
+
+    </header>
+
+
+
+    <!-- Hero -->
+
+    <section class="hero">
+
+      <div class="eyebrow">
+        A SPECIAL MOMENT WITH MOM
+      </div>
+
+      <h1>
+        Mom & Me
+        <span>AR Moment</span>
+      </h1>
+
+      <p class="description">
+        สร้างโมเมนต์พิเศษกับคนพิเศษที่สุด
+        เปิด AR และถ่ายภาพกับกรอบวันแม่จาก M Card
+      </p>
+
+
+      <!-- 3D Preview -->
+
+      <div class="model-wrapper">
+
+        <div class="model-glow"></div>
+
+        <model-viewer
+          id="arModel"
+
+          src="./Jasmine_02.glb"
+
+          alt="M Card Mother's Day AR Frame"
+
+          camera-controls
+          auto-rotate
+
+          rotation-per-second="18deg"
+
+          shadow-intensity="0.7"
+          exposure="1.15"
+
+          interaction-prompt="none"
+
+          ar
+          ar-modes="webxr scene-viewer quick-look"
+
+          ar-scale="fixed">
+
+          <!-- Custom AR Button -->
+
+          <button
+            slot="ar-button"
+            id="realARButton"
+            style="display:none;">
+          </button>
+
+        </model-viewer>
+
+      </div>
+
+    </section>
+
+
+
+    <!-- Bottom CTA -->
+
+    <section class="bottom">
+
+      <div class="instruction">
+
+        <span>
+          ✦ เปิด AR
+        </span>
+
+        <div class="dot"></div>
+
+        <span>
+          จัดตำแหน่ง
+        </span>
+
+        <div class="dot"></div>
+
+        <span>
+          ถ่ายโมเมนต์
+        </span>
+
+      </div>
+
+
+      <button
+        class="ar-button"
+        id="startAR"
+      >
+
+        <span>
+          เริ่มเล่น AR
+        </span>
+
+        <span class="arrow">
+          →
+        </span>
+
+      </button>
+
+
+      <div class="caption">
+        Best experienced on your mobile device
+      </div>
+
+    </section>
+
+
+  </main>
+
+
+  <script>
+
+    const startButton =
+      document.getElementById("startAR");
+
+    const arButton =
+      document.getElementById("realARButton");
+
+
+    startButton.addEventListener(
+      "click",
+      () => {
+
+        arButton.click();
+
+      }
+    );
+
+  </script>
+
 
 </body>
 
